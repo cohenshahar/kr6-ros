@@ -1,0 +1,7 @@
+# Lockstep: hand the policy an observation, get back an action chunk.
+uint64 obs_seq
+sensor_msgs/JointState joint_state
+sensor_msgs/Image[] images
+---
+bool ok
+kr6_msgs/ActionChunk chunk

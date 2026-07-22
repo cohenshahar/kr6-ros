@@ -1,0 +1,26 @@
+GATE R0 evidence — 2026-07-22 15:40
+
+=== colcon build ===
+Summary: 5 packages finished (clean, after setup.cfg fix)
+
+=== ros2 interface show kr6_msgs/srv/Reset ===
+# Reset the simulation to a seeded episode layout.
+int64 seed
+string task          # "box" | "ball"
+string condition     # "" (C0) | "C1_red" | "C1_blue" | "C2_085" | "C2_115"
+---
+bool ok
+string info
+
+=== launch: 3 nodes up ===
+[INFO] [sim_node-1]: process started with pid [21937]
+[INFO] [policy_node-2]: process started with pid [21939]
+[INFO] [executor_node-3]: process started with pid [21941]
+[executor_node-3] [INFO] [1784723967.512079488] [executor_node]: executor_node up (skeleton)
+[sim_node-1] [INFO] [1784723967.512159223] [sim_node]: sim_node up (skeleton)
+[policy_node-2] [INFO] [1784723967.512189039] [policy_node]: policy_node up (skeleton)
+
+=== ros2 node list (during launch) ===
+/executor_node
+/policy_node
+/sim_node

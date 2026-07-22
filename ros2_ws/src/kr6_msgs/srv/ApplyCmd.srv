@@ -1,0 +1,9 @@
+# Lockstep: apply one 7-D command window, step physics, return the new observation.
+float64[] cmd        # 7-D action (xyz, rot, vacuum)
+---
+bool ok
+uint64 obs_seq
+sensor_msgs/JointState joint_state
+geometry_msgs/Pose object_pose
+sensor_msgs/Image[] images          # policy cameras, order fixed by sim params
+bool success_window

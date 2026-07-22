@@ -1,0 +1,7 @@
+# Reset the simulation to a seeded episode layout.
+int64 seed
+string task          # "box" | "ball"
+string condition     # "" (C0) | "C1_red" | "C1_blue" | "C2_085" | "C2_115"
+---
+bool ok
+string info
