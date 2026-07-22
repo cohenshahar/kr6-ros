@@ -27,6 +27,7 @@ import numpy as np  # noqa: E402
 import rclpy  # noqa: E402
 from rclpy.node import Node  # noqa: E402
 
+from kr6_msgs.msg import ActionChunk, JointCmd, Obs  # noqa: E402
 from kr6_msgs.srv import SolveIK  # noqa: E402
 
 from core import EXEC_IK_ITERS, SceneV2  # noqa: E402
@@ -38,6 +39,14 @@ class ExecutorNode(Node):
         # kinematics-only scene copy: no system camera, no renderer
         self.scene = SceneV2(system=None, render=0)
         self.create_service(SolveIK, "/kr6/solve_ik", self.on_solve)
+        self.declare_parameter("mode", "lockstep")
+        self.mode = str(self.get_parameter("mode").value)
+        self.latest_obs = None
+        if self.mode == "freerun":
+            self.pub_cmd = self.create_publisher(JointCmd, "/kr6/joint_cmd", 2)
+            self.create_subscription(Obs, "/kr6/obs", self.on_obs_msg, 1)
+            self.create_subscription(ActionChunk, "/kr6/action",
+                                     self.on_action, 1)
         self.get_logger().info("executor_node up: kinematic scene loaded, "
                                "flange-site axis-only IK ready")
 
@@ -63,6 +72,33 @@ class ExecutorNode(Node):
             self.get_logger().error(f"solve_ik failed: {e!r}")
             res.ok = False
         return res
+
+
+    def on_obs_msg(self, msg):
+        self.latest_obs = msg
+
+    def on_action(self, msg):
+        """Free-run: solve IK for the action delta against the FRESHEST state
+        (reactive-control contract), publish the joint setpoint."""
+        try:
+            o = self.latest_obs
+            if o is None:
+                return
+            s = self.scene
+            a = np.asarray(msg.data, dtype=np.float32)
+            s.d.qpos[:] = np.asarray(o.qpos_full, dtype=float)
+            p0 = np.array([o.flange_pose.position.x, o.flange_pose.position.y,
+                           o.flange_pose.position.z])
+            q_wp, _ = s.ik(p0 + np.asarray(a[0:3], dtype=float),
+                           np.array(s.d.qpos[s.qadr]), iters=EXEC_IK_ITERS,
+                           axis_only=True, site=s.fid)
+            cmd = JointCmd()
+            cmd.q_wp = [float(v) for v in q_wp]
+            cmd.vacuum = 1.0 if a[6] > 0.5 else 0.0
+            cmd.obs_seq = msg.obs_seq
+            self.pub_cmd.publish(cmd)
+        except Exception as e:
+            self.get_logger().error(f"freerun solve failed: {e!r}")
 
 
 def main(args=None):

@@ -5,3 +5,4 @@ string video_prefix   # absolute path prefix; empty = discard frames
 bool ok
 string policy_video
 string spec_video
+string stats_json     # free-run episode stats (empty in lockstep mode)

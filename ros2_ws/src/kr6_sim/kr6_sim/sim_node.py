@@ -34,6 +34,7 @@ from geometry_msgs.msg import Pose  # noqa: E402
 from rclpy.node import Node  # noqa: E402
 from sensor_msgs.msg import Image, JointState  # noqa: E402
 
+from kr6_msgs.msg import JointCmd, Obs  # noqa: E402
 from kr6_msgs.srv import ApplyCmd, ApplyJoint, FinishEpisode, GetObs, Reset  # noqa: E402
 
 from core import (ARM, EXEC_GATE, EXEC_OVERTIME, LIFT_HEIGHT,  # noqa: E402
@@ -72,6 +73,8 @@ class SimNode(Node):
         self.declare_parameter("system_id", 0)
         self.declare_parameter("render", 224)
         self.declare_parameter("obs_cameras", [""])  # extra named cams (3cam)
+        self.declare_parameter("mode", "lockstep")   # lockstep | freerun
+        self.declare_parameter("window_period_s", 0.05)  # freerun: real-time 50 ms
         sysid = int(self.get_parameter("system_id").value)
         render = int(self.get_parameter("render").value)
         self.obs_cameras = [c for c in
@@ -100,6 +103,20 @@ class SimNode(Node):
         # debug/freerun topics (best-effort mirrors of the service payloads)
         self.pub_img = self.create_publisher(Image, "/kr6/camera/policy", 2)
         self.pub_js = self.create_publisher(JointState, "/kr6/joint_states", 2)
+        # ── free-run mode: timer-driven windows, latest-wins joint command ──
+        self.mode = str(self.get_parameter("mode").value)
+        self.window = 0
+        self.latest_cmd = None
+        self.episode_active = False
+        self.stats = None
+        if self.mode == "freerun":
+            import time as _time
+            self._time = _time
+            period = float(self.get_parameter("window_period_s").value)
+            self.pub_obs = self.create_publisher(Obs, "/kr6/obs", 2)
+            self.create_subscription(JointCmd, "/kr6/joint_cmd",
+                                     self.on_joint_cmd, 2)
+            self.create_timer(period, self.on_window_timer)
         self.get_logger().info(
             f"sim_node up: system {sysid} (camera {self.system['camera']}), "
             f"render {render}, extra obs cams {self.obs_cameras}, "
@@ -176,6 +193,15 @@ class SimNode(Node):
             self.rest_z = float(obj_start[2])
             self.hold = 0
             self.frames, self.spec_frames = [], []
+            if self.mode == "freerun":
+                self.window = 0
+                self.latest_cmd = None
+                self.stats = dict(applied_windows=0, cmd_age_windows=[],
+                                  window_wall_ms=[], obs_window_of={},
+                                  max_windows=350, success=False, windows=0)
+                self.stats["obs_window_of"][self.obs_seq + 1] = 0
+                self._publish_obs(False)
+                self.episode_active = True
             res.ok = True
             res.info = json.dumps(dict(
                 ep_seed_final=ep_seed, vis_tries=vis_tries, vis_px=int(vis_px),
@@ -234,6 +260,74 @@ class SimNode(Node):
             res.ok = False
             return res
 
+    def on_joint_cmd(self, msg):
+        self.latest_cmd = msg
+
+    def _publish_obs(self, done):
+        s = self.scene
+        self.obs_seq += 1
+        m = Obs()
+        m.obs_seq = self.obs_seq
+        m.window = self.window
+        stamp = self.get_clock().now().to_msg()
+        m.stamp = stamp
+        js = JointState()
+        js.header.stamp = stamp
+        js.name = list(ARM)
+        js.position = [float(v) for v in s.d.qpos[s.qadr]]
+        m.joint_state = js
+        m.qpos_full = [float(v) for v in s.d.qpos]
+        m.flange_pose = _pose_from_xyz(s.d.site_xpos[s.fid])
+        m.object_pose = _pose_from_xyz(s.obj_pos(self.obj))
+        frame = self._render_policy()
+        self.frames.append(frame)
+        self.spec_frames.append(self._render_spec())
+        m.images = [_np_to_image_msg(frame, stamp, self.system["camera"])]
+        for cam in self.obs_cameras:
+            s.r.update_scene(s.d, camera=cam)
+            extra = np.asarray(s.r.render(), dtype=np.uint8)
+            m.images.append(_np_to_image_msg(extra, stamp, cam))
+        m.done = bool(done)
+        self.pub_obs.publish(m)
+
+    def on_window_timer(self):
+        """One real-time control window: apply the LATEST joint command (or
+        hold), step the servo loop, publish a fresh observation. The plant
+        never waits for the controller — that is the free-run contract."""
+        if not self.episode_active:
+            return
+        import mujoco
+        s = self.scene
+        t0 = self._time.monotonic()
+        cmd = self.latest_cmd
+        if cmd is not None:
+            q_wp = np.asarray(cmd.q_wp, dtype=float)
+            s.d.ctrl[s.vac] = 1.0 if cmd.vacuum > 0.5 else 0.0
+            for _ in range(WINDOW_STEPS * EXEC_OVERTIME):
+                e = q_wp - np.array(s.d.qpos[s.qadr])
+                if float(np.max(np.abs(e))) < EXEC_GATE:
+                    break
+                s.d.ctrl[s.act] = np.clip(q_wp + 2.0 * e, s.lo, s.hi)
+                mujoco.mj_step(s.m, s.d)
+            s.d.ctrl[s.act] = q_wp
+            self.stats["applied_windows"] += 1
+            self.stats["cmd_age_windows"].append(
+                int(self.window) - self.stats["obs_window_of"].get(
+                    cmd.obs_seq, int(self.window)))
+        else:
+            for _ in range(WINDOW_STEPS):   # no command yet: physics idles on
+                mujoco.mj_step(s.m, s.d)
+        self.window += 1
+        done = self._success()
+        self.stats["obs_window_of"][self.obs_seq + 1] = int(self.window)
+        self._publish_obs(done)
+        self.stats["window_wall_ms"].append(
+            round((self._time.monotonic() - t0) * 1000, 2))
+        if done or self.window >= self.stats["max_windows"]:
+            self.episode_active = False
+            self.stats["success"] = bool(done)
+            self.stats["windows"] = int(self.window)
+
     def on_finish(self, req, res):
         try:
             if req.video_prefix:
@@ -244,6 +338,17 @@ class SimNode(Node):
                 imageio.mimsave(res.policy_video, self.frames, fps=8)
                 imageio.mimsave(res.spec_video, self.spec_frames, fps=8)
             self.frames, self.spec_frames = [], []
+            if self.mode == "freerun" and self.stats is not None:
+                st = dict(self.stats)
+                st.pop("obs_window_of", None)
+                ages = st.pop("cmd_age_windows", [])
+                walls = st.pop("window_wall_ms", [])
+                st["cmd_age_mean_windows"] = (round(float(np.mean(ages)), 2)
+                                              if ages else None)
+                st["cmd_age_max_windows"] = int(np.max(ages)) if ages else None
+                st["window_wall_ms_mean"] = (round(float(np.mean(walls)), 2)
+                                             if walls else None)
+                res.stats_json = json.dumps(st)
             res.ok = True
         except Exception as e:
             self.get_logger().error(f"finish_episode failed: {e!r}")

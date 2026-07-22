@@ -29,7 +29,7 @@ import numpy as np  # noqa: E402
 import rclpy  # noqa: E402
 from rclpy.node import Node  # noqa: E402
 
-from kr6_msgs.msg import ActionChunk  # noqa: E402
+from kr6_msgs.msg import ActionChunk, Obs  # noqa: E402
 from kr6_msgs.srv import GetChunk  # noqa: E402
 
 DEFAULT_CKPT = {
@@ -58,6 +58,13 @@ class PolicyNode(Node):
         self.predict = predict
         self.policy, self.pre, self.post = load_policy(ckpt)
         self.create_service(GetChunk, "/kr6/get_chunk", self.on_get_chunk)
+        self.declare_parameter("mode", "lockstep")
+        self.mode = str(self.get_parameter("mode").value)
+        self.vac_prev = 0.0
+        self.first_obs_pending = True
+        if self.mode == "freerun":
+            self.pub_action = self.create_publisher(ActionChunk, "/kr6/action", 2)
+            self.create_subscription(Obs, "/kr6/obs", self.on_obs, 1)  # depth 1: latest wins
         self.get_logger().info(f"policy_node up: {kind} @ {ckpt}")
 
     def on_get_chunk(self, req, res):
@@ -93,6 +100,45 @@ class PolicyNode(Node):
             self.get_logger().error(f"get_chunk failed: {e!r}")
             res.ok = False
         return res
+
+
+    def on_obs(self, msg):
+        """Free-run: predict on the freshest obs; stale ones are dropped by
+        the depth-1 QoS queue. window==0 marks a new episode (reset queue)."""
+        try:
+            if msg.window == 0:
+                self.policy.reset()
+                self.vac_prev = 0.0
+            frames = {}
+            for img in msg.images:
+                frames[img.header.frame_id] = np.frombuffer(
+                    bytes(img.data), dtype=np.uint8).reshape(
+                    img.height, img.width, 3)
+            sys_frame = np.frombuffer(
+                bytes(msg.images[0].data), dtype=np.uint8).reshape(
+                msg.images[0].height, msg.images[0].width, 3)
+            state = np.asarray([msg.flange_pose.position.x,
+                                msg.flange_pose.position.y,
+                                msg.flange_pose.position.z,
+                                self.vac_prev], dtype=np.float32)
+            instruction = "pick up the white box and place it in the brown crate"
+            if self.cam_map is None:
+                a = self.predict(self.policy, self.pre, self.post, sys_frame,
+                                 state, instruction)
+            else:
+                imgs = {key: (sys_frame if cam is None else frames[cam])
+                        for key, cam in self.cam_map.items()}
+                a = self.predict(self.policy, self.pre, self.post, imgs,
+                                 state, instruction)
+            self.vac_prev = 1.0 if a[6] > 0.5 else 0.0
+            out = ActionChunk()
+            out.obs_seq = msg.obs_seq
+            out.chunk_len = 1
+            out.dim = 7
+            out.data = [float(v) for v in a]
+            self.pub_action.publish(out)
+        except Exception as e:
+            self.get_logger().error(f"freerun predict failed: {e!r}")
 
 
 def main(args=None):

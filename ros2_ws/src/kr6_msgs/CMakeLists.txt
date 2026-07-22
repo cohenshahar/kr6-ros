@@ -6,6 +6,8 @@ find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ActionChunk.msg"
+  "msg/Obs.msg"
+  "msg/JointCmd.msg"
   "srv/Reset.srv"
   "srv/ApplyCmd.srv"
   "srv/GetChunk.srv"
@@ -13,6 +15,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/FinishEpisode.srv"
   "srv/SolveIK.srv"
   "srv/ApplyJoint.srv"
-  DEPENDENCIES sensor_msgs geometry_msgs
+  DEPENDENCIES sensor_msgs geometry_msgs builtin_interfaces
 )
 ament_package()
