@@ -1,0 +1,10 @@
+# Observation WITHOUT stepping physics (window-0 frame before the first action).
+---
+bool ok
+uint64 obs_seq
+sensor_msgs/JointState joint_state
+float64[] qpos_full
+geometry_msgs/Pose flange_pose
+geometry_msgs/Pose object_pose
+sensor_msgs/Image[] images
+bool done

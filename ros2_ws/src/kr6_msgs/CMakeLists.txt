@@ -9,6 +9,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/Reset.srv"
   "srv/ApplyCmd.srv"
   "srv/GetChunk.srv"
+  "srv/GetObs.srv"
+  "srv/FinishEpisode.srv"
   DEPENDENCIES sensor_msgs geometry_msgs
 )
 ament_package()

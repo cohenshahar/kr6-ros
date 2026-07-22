@@ -1,0 +1,7 @@
+# Flush recorded frames of the finished episode to video files.
+# Writes <prefix>.mp4 (policy cam) and <prefix>_spec.mp4 (wide spectator).
+string video_prefix   # absolute path prefix; empty = discard frames
+---
+bool ok
+string policy_video
+string spec_video

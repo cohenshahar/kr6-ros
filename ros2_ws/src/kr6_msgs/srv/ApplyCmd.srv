@@ -1,9 +1,12 @@
-# Lockstep: apply one 7-D command window, step physics, return the new observation.
-float64[] cmd        # 7-D action (xyz, rot, vacuum)
+# Lockstep: apply one 7-D action window (executor v2 inside the sim), then
+# return the fresh observation. Same semantics as nt16 execute_window.
+float64[] cmd        # 7-D action: dxyz, drot(axis-angle, ignored by executor), vacuum
 ---
 bool ok
 uint64 obs_seq
-sensor_msgs/JointState joint_state
-geometry_msgs/Pose object_pose
-sensor_msgs/Image[] images          # policy cameras, order fixed by sim params
-bool success_window
+sensor_msgs/JointState joint_state   # arm joints
+float64[] qpos_full                  # full qpos snapshot (executor IK parity, R2)
+geometry_msgs/Pose flange_pose       # ft_site (recording/execution EE frame)
+geometry_msgs/Pose object_pose       # the task object
+sensor_msgs/Image[] images           # [policy_cam] (+ others later)
+bool done                            # task success predicate this window

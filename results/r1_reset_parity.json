@@ -1,0 +1,126 @@
+{
+ "task": "box",
+ "seeds": [
+  {
+   "seed": 50000,
+   "ros": {
+    "ep_seed_final": 1050000,
+    "vis_tries": 1,
+    "vis_px": 1437,
+    "instruction": "pick up the white box and place it in the brown crate",
+    "obj_start": [
+     0.2175,
+     -0.5548,
+     0.7949
+    ]
+   },
+   "direct": {
+    "ep_seed_final": 1050000,
+    "obj_start": [
+     0.2175,
+     -0.5548,
+     0.7949
+    ]
+   },
+   "seed_match": true,
+   "layout_match": true,
+   "frame_ok": true,
+   "joints_ok": true,
+   "flange_moved_mm": 47.06,
+   "executor_ok": true,
+   "videos_ok": true,
+   "pass": true
+  },
+  {
+   "seed": 50007,
+   "ros": {
+    "ep_seed_final": 1050007,
+    "vis_tries": 1,
+    "vis_px": 1064,
+    "instruction": "pick up the white box and place it in the brown crate",
+    "obj_start": [
+     0.062,
+     -0.1189,
+     0.7949
+    ]
+   },
+   "direct": {
+    "ep_seed_final": 1050007,
+    "obj_start": [
+     0.062,
+     -0.1189,
+     0.7949
+    ]
+   },
+   "seed_match": true,
+   "layout_match": true,
+   "frame_ok": true,
+   "joints_ok": true,
+   "flange_moved_mm": 47.06,
+   "executor_ok": true,
+   "videos_ok": true,
+   "pass": true
+  },
+  {
+   "seed": 50012,
+   "ros": {
+    "ep_seed_final": 50012,
+    "vis_tries": 0,
+    "vis_px": 88,
+    "instruction": "pick up the white box and place it in the brown crate",
+    "obj_start": [
+     -0.7579,
+     -0.8113,
+     0.7949
+    ]
+   },
+   "direct": {
+    "ep_seed_final": 50012,
+    "obj_start": [
+     -0.7579,
+     -0.8113,
+     0.7949
+    ]
+   },
+   "seed_match": true,
+   "layout_match": true,
+   "frame_ok": true,
+   "joints_ok": true,
+   "flange_moved_mm": 47.06,
+   "executor_ok": true,
+   "videos_ok": true,
+   "pass": true
+  },
+  {
+   "seed": 51003,
+   "ros": {
+    "ep_seed_final": 51003,
+    "vis_tries": 0,
+    "vis_px": 1398,
+    "instruction": "pick up the white box and place it in the brown crate",
+    "obj_start": [
+     0.1789,
+     -0.5227,
+     0.7949
+    ]
+   },
+   "direct": {
+    "ep_seed_final": 51003,
+    "obj_start": [
+     0.1789,
+     -0.5227,
+     0.7949
+    ]
+   },
+   "seed_match": true,
+   "layout_match": true,
+   "frame_ok": true,
+   "joints_ok": true,
+   "flange_moved_mm": 47.06,
+   "executor_ok": true,
+   "videos_ok": true,
+   "pass": true
+  }
+ ],
+ "all_pass": true
+}
