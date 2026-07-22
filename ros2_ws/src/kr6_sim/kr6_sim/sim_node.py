@@ -71,8 +71,11 @@ class SimNode(Node):
         super().__init__("sim_node")
         self.declare_parameter("system_id", 0)
         self.declare_parameter("render", 224)
+        self.declare_parameter("obs_cameras", [""])  # extra named cams (3cam)
         sysid = int(self.get_parameter("system_id").value)
         render = int(self.get_parameter("render").value)
+        self.obs_cameras = [c for c in
+                            self.get_parameter("obs_cameras").value if c]
 
         self.systems = load_systems()
         self.system = self.systems[sysid]
@@ -99,7 +102,8 @@ class SimNode(Node):
         self.pub_js = self.create_publisher(JointState, "/kr6/joint_states", 2)
         self.get_logger().info(
             f"sim_node up: system {sysid} (camera {self.system['camera']}), "
-            f"render {render}, nt16 at {NT16_DIR}")
+            f"render {render}, extra obs cams {self.obs_cameras}, "
+            f"nt16 at {NT16_DIR}")
 
     # ── helpers ────────────────────────────────────────────────────────────
     def _render_policy(self):
@@ -138,6 +142,10 @@ class SimNode(Node):
         res.object_pose = _pose_from_xyz(s.obj_pos(self.obj))
         img = _np_to_image_msg(frame, stamp, self.system["camera"])
         res.images = [img]
+        for cam in self.obs_cameras:  # same renderer re-posed (eval_smolvla)
+            s.r.update_scene(s.d, camera=cam)
+            extra = np.asarray(s.r.render(), dtype=np.uint8)
+            res.images.append(_np_to_image_msg(extra, stamp, cam))
         res.done = bool(done)
         self.pub_img.publish(img)
         self.pub_js.publish(js)

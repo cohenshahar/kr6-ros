@@ -1,0 +1,1001 @@
+{
+  "checkpoint": "runs/smolvla_boxv2_3cam/checkpoints/last/pretrained_model",
+  "policy": "SmolVLA (lerobot)",
+  "camera_mode": "3cam",
+  "cameras": {
+    "observation.images.camera1": "cam_lift",
+    "observation.images.camera2": "cam_side_ny",
+    "observation.images.camera3": "cam_top"
+  },
+  "chunk_size": 50,
+  "n_action_steps": 50,
+  "executor": "flange-site IK (axis-only) + lead joint control",
+  "eval_seed_base": 50000,
+  "episodes": [
+    {
+      "success": false,
+      "success_window": null,
+      "min_ee_obj_dist_m": 0.4955,
+      "min_ee_obj_dist_window": 54,
+      "windows": 350,
+      "obj_start": [
+        0.2175,
+        -0.5548,
+        0.7949
+      ],
+      "obj_final": [
+        0.2175,
+        -0.5548,
+        0.7949
+      ],
+      "obj_moved_m": 0.0,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 1050000,
+      "wall_s": 5.3,
+      "action_abs_mean": [
+        0.00356,
+        0.00186,
+        0.00295,
+        0.00047,
+        0.00102,
+        0.02529,
+        0.38006
+      ],
+      "vacuum_on_frac": 0.38,
+      "net_cmd_xy_mm": [
+        -706.5,
+        322.0
+      ],
+      "cos_cmd_vs_obj": -0.88,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep0.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep0_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 153,
+      "min_ee_obj_dist_m": 0.4678,
+      "min_ee_obj_dist_window": 146,
+      "windows": 154,
+      "obj_start": [
+        -0.2032,
+        -0.0799,
+        0.7949
+      ],
+      "obj_final": [
+        -0.6686,
+        -0.2206,
+        0.8515
+      ],
+      "obj_moved_m": 0.4862,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50001,
+      "wall_s": 3.4,
+      "action_abs_mean": [
+        0.00511,
+        0.00401,
+        0.00469,
+        0.00112,
+        0.00094,
+        0.0611,
+        0.60839
+      ],
+      "vacuum_on_frac": 0.604,
+      "net_cmd_xy_mm": [
+        -754.5,
+        322.4
+      ],
+      "cos_cmd_vs_obj": -0.039,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep1.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep1_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 171,
+      "min_ee_obj_dist_m": 0.4663,
+      "min_ee_obj_dist_window": 145,
+      "windows": 172,
+      "obj_start": [
+        0.2668,
+        -0.4682,
+        0.7949
+      ],
+      "obj_final": [
+        -0.6646,
+        -0.2303,
+        0.8666
+      ],
+      "obj_moved_m": 0.9613,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50002,
+      "wall_s": 3.5,
+      "action_abs_mean": [
+        0.007,
+        0.00371,
+        0.00386,
+        0.00063,
+        0.00174,
+        0.03689,
+        0.7065
+      ],
+      "vacuum_on_frac": 0.703,
+      "net_cmd_xy_mm": [
+        -748.4,
+        352.6
+      ],
+      "cos_cmd_vs_obj": -0.813,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep2.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep2_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 163,
+      "min_ee_obj_dist_m": 0.5088,
+      "min_ee_obj_dist_window": 63,
+      "windows": 164,
+      "obj_start": [
+        -0.0364,
+        0.0666,
+        0.7949
+      ],
+      "obj_final": [
+        -0.7284,
+        -0.2678,
+        0.8682
+      ],
+      "obj_moved_m": 0.7685,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50003,
+      "wall_s": 3.6,
+      "action_abs_mean": [
+        0.00631,
+        0.0063,
+        0.00403,
+        0.00158,
+        0.00162,
+        0.05752,
+        0.64544
+      ],
+      "vacuum_on_frac": 0.64,
+      "net_cmd_xy_mm": [
+        -736.2,
+        324.1
+      ],
+      "cos_cmd_vs_obj": -0.14,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep3.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep3_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 163,
+      "min_ee_obj_dist_m": 0.4924,
+      "min_ee_obj_dist_window": 52,
+      "windows": 164,
+      "obj_start": [
+        0.1607,
+        -0.2726,
+        0.7949
+      ],
+      "obj_final": [
+        -0.7194,
+        -0.311,
+        0.8683
+      ],
+      "obj_moved_m": 0.8809,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50004,
+      "wall_s": 3.7,
+      "action_abs_mean": [
+        0.00698,
+        0.00485,
+        0.00419,
+        0.00115,
+        0.00181,
+        0.05214,
+        0.69891
+      ],
+      "vacuum_on_frac": 0.695,
+      "net_cmd_xy_mm": [
+        -747.2,
+        316.9
+      ],
+      "cos_cmd_vs_obj": -0.627,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep4.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep4_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 148,
+      "min_ee_obj_dist_m": 0.5014,
+      "min_ee_obj_dist_window": 56,
+      "windows": 149,
+      "obj_start": [
+        -0.1565,
+        -0.2561,
+        0.7949
+      ],
+      "obj_final": [
+        -0.6846,
+        -0.2508,
+        0.8677
+      ],
+      "obj_moved_m": 0.5281,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50005,
+      "wall_s": 3.1,
+      "action_abs_mean": [
+        0.00529,
+        0.00402,
+        0.00465,
+        0.00084,
+        0.00099,
+        0.07009,
+        0.64872
+      ],
+      "vacuum_on_frac": 0.644,
+      "net_cmd_xy_mm": [
+        -747.7,
+        331.7
+      ],
+      "cos_cmd_vs_obj": -0.285,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep5.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep5_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 172,
+      "min_ee_obj_dist_m": 0.5,
+      "min_ee_obj_dist_window": 74,
+      "windows": 173,
+      "obj_start": [
+        -0.2408,
+        0.1385,
+        0.7949
+      ],
+      "obj_final": [
+        -0.7197,
+        -0.2722,
+        0.8658
+      ],
+      "obj_moved_m": 0.6308,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50006,
+      "wall_s": 3.6,
+      "action_abs_mean": [
+        0.00493,
+        0.00656,
+        0.00399,
+        0.00155,
+        0.00109,
+        0.06026,
+        0.58629
+      ],
+      "vacuum_on_frac": 0.584,
+      "net_cmd_xy_mm": [
+        -711.8,
+        310.8
+      ],
+      "cos_cmd_vs_obj": 0.135,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep6.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep6_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 204,
+      "min_ee_obj_dist_m": 0.4145,
+      "min_ee_obj_dist_window": 169,
+      "windows": 205,
+      "obj_start": [
+        0.062,
+        -0.1189,
+        0.7949
+      ],
+      "obj_final": [
+        -0.6662,
+        -0.2137,
+        0.8698
+      ],
+      "obj_moved_m": 0.7343,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 1050007,
+      "wall_s": 4.3,
+      "action_abs_mean": [
+        0.0053,
+        0.00405,
+        0.00455,
+        0.00107,
+        0.00153,
+        0.04238,
+        0.58264
+      ],
+      "vacuum_on_frac": 0.576,
+      "net_cmd_xy_mm": [
+        -741.5,
+        341.0
+      ],
+      "cos_cmd_vs_obj": -0.376,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep7.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep7_wide.mp4"
+    },
+    {
+      "success": false,
+      "success_window": null,
+      "min_ee_obj_dist_m": 0.5333,
+      "min_ee_obj_dist_window": 41,
+      "windows": 350,
+      "obj_start": [
+        0.021,
+        -0.616,
+        0.7949
+      ],
+      "obj_final": [
+        0.021,
+        -0.616,
+        0.7949
+      ],
+      "obj_moved_m": 0.0,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50008,
+      "wall_s": 4.7,
+      "action_abs_mean": [
+        0.00252,
+        0.00201,
+        0.00259,
+        0.00047,
+        0.00073,
+        0.02127,
+        0.3609
+      ],
+      "vacuum_on_frac": 0.357,
+      "net_cmd_xy_mm": [
+        -758.6,
+        336.1
+      ],
+      "cos_cmd_vs_obj": -0.928,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep8.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep8_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 171,
+      "min_ee_obj_dist_m": 0.4997,
+      "min_ee_obj_dist_window": 87,
+      "windows": 172,
+      "obj_start": [
+        -0.5616,
+        0.0889,
+        0.7949
+      ],
+      "obj_final": [
+        -0.7586,
+        -0.2835,
+        0.8688
+      ],
+      "obj_moved_m": 0.4213,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50009,
+      "wall_s": 3.6,
+      "action_abs_mean": [
+        0.00493,
+        0.00618,
+        0.00401,
+        0.00152,
+        0.00093,
+        0.05069,
+        0.51455
+      ],
+      "vacuum_on_frac": 0.512,
+      "net_cmd_xy_mm": [
+        -766.7,
+        324.2
+      ],
+      "cos_cmd_vs_obj": 0.532,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep9.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep9_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 152,
+      "min_ee_obj_dist_m": 0.5014,
+      "min_ee_obj_dist_window": 66,
+      "windows": 153,
+      "obj_start": [
+        -0.2826,
+        -0.1082,
+        0.7949
+      ],
+      "obj_final": [
+        -0.6715,
+        -0.2756,
+        0.8695
+      ],
+      "obj_moved_m": 0.4234,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50010,
+      "wall_s": 3.4,
+      "action_abs_mean": [
+        0.00558,
+        0.00501,
+        0.00463,
+        0.00144,
+        0.00131,
+        0.05987,
+        0.59561
+      ],
+      "vacuum_on_frac": 0.595,
+      "net_cmd_xy_mm": [
+        -764.6,
+        311.4
+      ],
+      "cos_cmd_vs_obj": 0.059,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep10.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep10_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 180,
+      "min_ee_obj_dist_m": 0.4946,
+      "min_ee_obj_dist_window": 81,
+      "windows": 181,
+      "obj_start": [
+        -0.3601,
+        0.1909,
+        0.7949
+      ],
+      "obj_final": [
+        -0.7872,
+        -0.253,
+        0.8671
+      ],
+      "obj_moved_m": 0.616,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50011,
+      "wall_s": 3.9,
+      "action_abs_mean": [
+        0.00492,
+        0.00661,
+        0.00389,
+        0.00207,
+        0.00113,
+        0.05861,
+        0.57289
+      ],
+      "vacuum_on_frac": 0.569,
+      "net_cmd_xy_mm": [
+        -787.8,
+        328.7
+      ],
+      "cos_cmd_vs_obj": 0.278,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep11.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep11_wide.mp4"
+    },
+    {
+      "success": false,
+      "success_window": null,
+      "min_ee_obj_dist_m": 0.7709,
+      "min_ee_obj_dist_window": 173,
+      "windows": 350,
+      "obj_start": [
+        -0.7579,
+        -0.8113,
+        0.7949
+      ],
+      "obj_final": [
+        -0.7579,
+        -0.8113,
+        0.7949
+      ],
+      "obj_moved_m": 0.0,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50012,
+      "wall_s": 4.9,
+      "action_abs_mean": [
+        0.00257,
+        0.00229,
+        0.00261,
+        0.00039,
+        0.00065,
+        0.02227,
+        0.37031
+      ],
+      "vacuum_on_frac": 0.366,
+      "net_cmd_xy_mm": [
+        -771.8,
+        335.7
+      ],
+      "cos_cmd_vs_obj": 0.53,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep12.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep12_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 157,
+      "min_ee_obj_dist_m": 0.5091,
+      "min_ee_obj_dist_window": 64,
+      "windows": 158,
+      "obj_start": [
+        -0.0159,
+        -0.0907,
+        0.7949
+      ],
+      "obj_final": [
+        -0.73,
+        -0.2411,
+        0.8695
+      ],
+      "obj_moved_m": 0.7298,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50013,
+      "wall_s": 3.3,
+      "action_abs_mean": [
+        0.00602,
+        0.00519,
+        0.00428,
+        0.0015,
+        0.00154,
+        0.05725,
+        0.61127
+      ],
+      "vacuum_on_frac": 0.608,
+      "net_cmd_xy_mm": [
+        -758.1,
+        322.9
+      ],
+      "cos_cmd_vs_obj": -0.299,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep13.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep13_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 163,
+      "min_ee_obj_dist_m": 0.5067,
+      "min_ee_obj_dist_window": 69,
+      "windows": 164,
+      "obj_start": [
+        -0.1342,
+        -0.0051,
+        0.7949
+      ],
+      "obj_final": [
+        -0.7224,
+        -0.2802,
+        0.8688
+      ],
+      "obj_moved_m": 0.6494,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 1050014,
+      "wall_s": 3.4,
+      "action_abs_mean": [
+        0.00541,
+        0.0062,
+        0.00409,
+        0.00157,
+        0.00147,
+        0.06221,
+        0.59343
+      ],
+      "vacuum_on_frac": 0.591,
+      "net_cmd_xy_mm": [
+        -741.7,
+        328.9
+      ],
+      "cos_cmd_vs_obj": -0.071,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep14.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep14_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 158,
+      "min_ee_obj_dist_m": 0.5018,
+      "min_ee_obj_dist_window": 135,
+      "windows": 159,
+      "obj_start": [
+        0.167,
+        -0.4292,
+        0.7949
+      ],
+      "obj_final": [
+        -0.7097,
+        -0.2361,
+        0.8693
+      ],
+      "obj_moved_m": 0.8977,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 1050015,
+      "wall_s": 3.6,
+      "action_abs_mean": [
+        0.00712,
+        0.00428,
+        0.00437,
+        0.00119,
+        0.00197,
+        0.04844,
+        0.70802
+      ],
+      "vacuum_on_frac": 0.704,
+      "net_cmd_xy_mm": [
+        -756.1,
+        333.2
+      ],
+      "cos_cmd_vs_obj": -0.774,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep15.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep15_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 159,
+      "min_ee_obj_dist_m": 0.4756,
+      "min_ee_obj_dist_window": 125,
+      "windows": 160,
+      "obj_start": [
+        -0.0736,
+        -0.2225,
+        0.7949
+      ],
+      "obj_final": [
+        -0.6782,
+        -0.2889,
+        0.8682
+      ],
+      "obj_moved_m": 0.6082,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50016,
+      "wall_s": 3.5,
+      "action_abs_mean": [
+        0.00584,
+        0.00452,
+        0.00439,
+        0.00107,
+        0.00135,
+        0.05051,
+        0.65961
+      ],
+      "vacuum_on_frac": 0.656,
+      "net_cmd_xy_mm": [
+        -774.5,
+        323.2
+      ],
+      "cos_cmd_vs_obj": -0.379,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep16.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep16_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 157,
+      "min_ee_obj_dist_m": 0.4793,
+      "min_ee_obj_dist_window": 129,
+      "windows": 158,
+      "obj_start": [
+        -0.2814,
+        -0.349,
+        0.7949
+      ],
+      "obj_final": [
+        -0.7052,
+        -0.2463,
+        0.8652
+      ],
+      "obj_moved_m": 0.436,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50017,
+      "wall_s": 3.8,
+      "action_abs_mean": [
+        0.00586,
+        0.00456,
+        0.00443,
+        0.00105,
+        0.00129,
+        0.05578,
+        0.62864
+      ],
+      "vacuum_on_frac": 0.627,
+      "net_cmd_xy_mm": [
+        -764.6,
+        334.3
+      ],
+      "cos_cmd_vs_obj": -0.178,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep17.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep17_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 148,
+      "min_ee_obj_dist_m": 0.5017,
+      "min_ee_obj_dist_window": 45,
+      "windows": 149,
+      "obj_start": [
+        -0.0303,
+        -0.4424,
+        0.7949
+      ],
+      "obj_final": [
+        -0.7387,
+        -0.2463,
+        0.8663
+      ],
+      "obj_moved_m": 0.735,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 1050018,
+      "wall_s": 3.1,
+      "action_abs_mean": [
+        0.00514,
+        0.00371,
+        0.00455,
+        0.00041,
+        0.00085,
+        0.04749,
+        0.72772
+      ],
+      "vacuum_on_frac": 0.725,
+      "net_cmd_xy_mm": [
+        -742.5,
+        318.4
+      ],
+      "cos_cmd_vs_obj": -0.722,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep18.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep18_wide.mp4"
+    },
+    {
+      "success": false,
+      "success_window": null,
+      "min_ee_obj_dist_m": 0.5193,
+      "min_ee_obj_dist_window": 56,
+      "windows": 350,
+      "obj_start": [
+        0.1611,
+        -0.1634,
+        0.7949
+      ],
+      "obj_final": [
+        0.1611,
+        -0.1634,
+        0.7949
+      ],
+      "obj_moved_m": 0.0,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50019,
+      "wall_s": 5.2,
+      "action_abs_mean": [
+        0.00313,
+        0.00284,
+        0.00322,
+        0.00083,
+        0.00095,
+        0.02242,
+        0.34719
+      ],
+      "vacuum_on_frac": 0.343,
+      "net_cmd_xy_mm": [
+        -714.4,
+        431.7
+      ],
+      "cos_cmd_vs_obj": -0.396,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep19.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep19_wide.mp4"
+    },
+    {
+      "success": false,
+      "success_window": null,
+      "min_ee_obj_dist_m": 0.5287,
+      "min_ee_obj_dist_window": 43,
+      "windows": 350,
+      "obj_start": [
+        -0.053,
+        -0.519,
+        0.7949
+      ],
+      "obj_final": [
+        -0.053,
+        -0.519,
+        0.7949
+      ],
+      "obj_moved_m": 0.0,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50020,
+      "wall_s": 4.6,
+      "action_abs_mean": [
+        0.00251,
+        0.00169,
+        0.00257,
+        0.0004,
+        0.00061,
+        0.02128,
+        0.338
+      ],
+      "vacuum_on_frac": 0.334,
+      "net_cmd_xy_mm": [
+        -760.8,
+        330.6
+      ],
+      "cos_cmd_vs_obj": -0.819,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep20.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep20_wide.mp4"
+    },
+    {
+      "success": false,
+      "success_window": null,
+      "min_ee_obj_dist_m": 0.4224,
+      "min_ee_obj_dist_window": 169,
+      "windows": 350,
+      "obj_start": [
+        0.0563,
+        -0.3714,
+        0.7949
+      ],
+      "obj_final": [
+        -0.6394,
+        -0.2737,
+        0.8098
+      ],
+      "obj_moved_m": 0.7025,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50021,
+      "wall_s": 5.2,
+      "action_abs_mean": [
+        0.00281,
+        0.00191,
+        0.00288,
+        0.00059,
+        0.00082,
+        0.02207,
+        0.3517
+      ],
+      "vacuum_on_frac": 0.346,
+      "net_cmd_xy_mm": [
+        -756.5,
+        343.6
+      ],
+      "cos_cmd_vs_obj": -0.66,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep21.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep21_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 158,
+      "min_ee_obj_dist_m": 0.4925,
+      "min_ee_obj_dist_window": 132,
+      "windows": 159,
+      "obj_start": [
+        0.0781,
+        -0.2372,
+        0.7949
+      ],
+      "obj_final": [
+        -0.6999,
+        -0.2402,
+        0.8673
+      ],
+      "obj_moved_m": 0.778,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 1050022,
+      "wall_s": 3.4,
+      "action_abs_mean": [
+        0.00659,
+        0.00482,
+        0.00433,
+        0.00117,
+        0.0017,
+        0.05519,
+        0.68883
+      ],
+      "vacuum_on_frac": 0.686,
+      "net_cmd_xy_mm": [
+        -742.9,
+        342.3
+      ],
+      "cos_cmd_vs_obj": -0.512,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep22.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep22_wide.mp4"
+    },
+    {
+      "success": true,
+      "success_window": 156,
+      "min_ee_obj_dist_m": 0.4926,
+      "min_ee_obj_dist_window": 128,
+      "windows": 157,
+      "obj_start": [
+        -0.0305,
+        -0.2885,
+        0.7949
+      ],
+      "obj_final": [
+        -0.7227,
+        -0.2417,
+        0.8653
+      ],
+      "obj_moved_m": 0.6938,
+      "system": 0,
+      "holdout": false,
+      "task": "box",
+      "camera": "cam_mid",
+      "ep_seed": 50023,
+      "wall_s": 3.4,
+      "action_abs_mean": [
+        0.00614,
+        0.0046,
+        0.0046,
+        0.0014,
+        0.00172,
+        0.0652,
+        0.67438
+      ],
+      "vacuum_on_frac": 0.675,
+      "net_cmd_xy_mm": [
+        -780.3,
+        321.4
+      ],
+      "cos_cmd_vs_obj": -0.515,
+      "video": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep23.mp4",
+      "video_wide": "/tmp/claude-1002/-home-michael-Desktop-shahar/df028684-9f68-48cc-bb9f-b4dd7cff1bb2/scratchpad/r4_direct_videos/smolvla_s00_box_ep23_wide.mp4"
+    }
+  ],
+  "success_total": "18/24"
+}

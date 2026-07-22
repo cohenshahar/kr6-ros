@@ -45,10 +45,16 @@ class PolicyNode(Node):
         self.declare_parameter("checkpoint", "")
         kind = str(self.get_parameter("policy").value)
         ckpt = str(self.get_parameter("checkpoint").value) or DEFAULT_CKPT[kind]
+        self.kind = kind
         if kind == "act":
             from eval_act import load_policy, predict
+            self.cam_map = None                    # single frame, positional
         else:
-            from eval_smolvla import load_policy, predict
+            from eval_smolvla import (CAM_MAP_3, CAM_MAP_SINGLE,
+                                      detect_camera_mode, load_policy, predict)
+            mode = detect_camera_mode(ckpt)
+            self.cam_map = CAM_MAP_SINGLE if mode == "single" else CAM_MAP_3
+            self.get_logger().info(f"smolvla camera mode: {mode}")
         self.predict = predict
         self.policy, self.pre, self.post = load_policy(ckpt)
         self.create_service(GetChunk, "/kr6/get_chunk", self.on_get_chunk)
@@ -58,13 +64,24 @@ class PolicyNode(Node):
         try:
             if req.reset_queue:
                 self.policy.reset()
-            img = req.image
-            assert img.encoding == "rgb8", f"unexpected encoding {img.encoding}"
-            frame = np.frombuffer(bytes(img.data), dtype=np.uint8).reshape(
-                img.height, img.width, 3)
-            a = self.predict(self.policy, self.pre, self.post, frame,
-                             np.asarray(req.state, dtype=np.float32),
-                             req.instruction)
+            frames = {}
+            for img in req.images:
+                assert img.encoding == "rgb8", f"bad encoding {img.encoding}"
+                frames[img.header.frame_id] = np.frombuffer(
+                    bytes(img.data), dtype=np.uint8).reshape(
+                    img.height, img.width, 3)
+            sys_frame = np.frombuffer(
+                bytes(req.images[0].data), dtype=np.uint8).reshape(
+                req.images[0].height, req.images[0].width, 3)
+            state = np.asarray(req.state, dtype=np.float32)
+            if self.cam_map is None:               # ACT: positional frame
+                a = self.predict(self.policy, self.pre, self.post, sys_frame,
+                                 state, req.instruction)
+            else:                                  # SmolVLA: dict of cameras
+                imgs = {key: (sys_frame if cam is None else frames[cam])
+                        for key, cam in self.cam_map.items()}
+                a = self.predict(self.policy, self.pre, self.post, imgs,
+                                 state, req.instruction)
             chunk = ActionChunk()
             chunk.obs_seq = req.obs_seq
             chunk.chunk_len = 1

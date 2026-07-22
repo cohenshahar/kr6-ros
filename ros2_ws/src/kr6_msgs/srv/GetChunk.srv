@@ -1,8 +1,10 @@
 # Lockstep: one observation in -> one 7-D action out (the lerobot policy's
-# internal chunk queue re-predicts when empty, exactly as eval_act.predict).
+# internal chunk queue re-predicts when empty, exactly as eval_*.predict).
+# images[0] is ALWAYS the system camera; extra images (3cam SmolVLA) carry
+# their scene-camera name in header.frame_id and are mapped by policy_node.
 uint64 obs_seq
 bool reset_queue     # true on the first call of an episode (policy.reset())
-sensor_msgs/Image image
+sensor_msgs/Image[] images
 float64[] state      # [flange xyz, vac_prev] — the recording-frame state
 string instruction
 ---

@@ -83,7 +83,7 @@ def main():
     success, success_win = False, None
     for w in range(MAX_WINDOWS):
         c = cli.call("chunk", GetChunk.Request(
-            obs_seq=o.obs_seq, reset_queue=(w == 0), image=o.images[0],
+            obs_seq=o.obs_seq, reset_queue=(w == 0), images=[o.images[0]],
             state=[*[float(v) for v in flange(o)], vac_prev],
             instruction=instruction))
         a = np.array(c.chunk.data, dtype=np.float32)

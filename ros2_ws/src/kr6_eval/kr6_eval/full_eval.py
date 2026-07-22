@@ -1,16 +1,18 @@
-"""GATE R3: full 24-episode ACT C0 eval through the 3-node ROS chain.
+"""Generalized full-eval client through the 3-node ROS chain (GATE R4+).
 
-Reproduces act/results/nt17_gen/nt17_eval_act_C0_base.json (23/24) and diffs
-per-episode. Gate passes iff success_total matches AND every episode's
-success flag matches the reference. Field-level drift, if any, is recorded —
-never rounded away (PLAN_ROS.md R3 rule).
+Same protocol as r3_full_eval (which stays frozen as R3 evidence), with the
+policy, reference JSON, and output paths as arguments. Sends ALL obs images
+to the policy node — policy_node maps them by frame_id (3cam SmolVLA) or uses
+the system frame (ACT).
 
-Run (nodes already up):
-  .venv python r3_full_eval.py
-Writes results/r3_act_c0_ros.json + results/r3_videos/.
+  .venv python full_eval.py --gate R4 \
+      --ref .../nt17_eval_smolvla_C0_base.json \
+      --out results/r4_smolvla_c0_ros.json --videos results/r4_videos \
+      --tag smolvla
 """
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import sys
@@ -29,9 +31,7 @@ from rclpy.node import Node
 from kr6_msgs.srv import ApplyJoint, FinishEpisode, GetChunk, GetObs, Reset, SolveIK
 
 REPO = "/home/michael/Desktop/shahar/kr6-ros"
-REF_JSON = "/home/michael/Desktop/shahar/act/results/nt17_gen/nt17_eval_act_C0_base.json"
 BASE_XY = np.array([-0.45, -0.60])
-TASK, EPISODES, MAX_WINDOWS = "box", 24, 350
 SEED_BASE = 50000
 COMPARE_KEYS = ["success", "success_window", "windows", "min_ee_obj_dist_m",
                 "min_ee_obj_dist_window", "obj_start", "obj_final",
@@ -41,7 +41,7 @@ COMPARE_KEYS = ["success", "success_window", "windows", "min_ee_obj_dist_m",
 
 class Client(Node):
     def __init__(self):
-        super().__init__("r3_eval_client")
+        super().__init__("full_eval_client")
         self.cli = {
             "reset": self.create_client(Reset, "/kr6/reset"),
             "obs": self.create_client(GetObs, "/kr6/get_obs"),
@@ -51,11 +51,11 @@ class Client(Node):
             "finish": self.create_client(FinishEpisode, "/kr6/finish_episode"),
         }
         for name, c in self.cli.items():
-            assert c.wait_for_service(timeout_sec=180.0), f"service {name} missing"
+            assert c.wait_for_service(timeout_sec=300.0), f"service {name} missing"
 
-    def call(self, name, req):
+    def call(self, name, req, timeout=900.0):
         fut = self.cli[name].call_async(req)
-        rclpy.spin_until_future_complete(self, fut, timeout_sec=900.0)
+        rclpy.spin_until_future_complete(self, fut, timeout_sec=timeout)
         assert fut.done(), f"{name} timed out"
         r = fut.result()
         assert getattr(r, "ok", True), f"{name} returned ok=False"
@@ -66,9 +66,9 @@ def _xyz(pose):
     return np.array([pose.position.x, pose.position.y, pose.position.z])
 
 
-def run_episode(cli, ep):
+def run_episode(cli, ep, task, max_windows, videos, tag):
     t0 = time.time()
-    r = cli.call("reset", Reset.Request(seed=SEED_BASE + ep, task=TASK,
+    r = cli.call("reset", Reset.Request(seed=SEED_BASE + ep, task=task,
                                         condition=""))
     info = json.loads(r.info)
     o = cli.call("obs", GetObs.Request())
@@ -76,9 +76,9 @@ def run_episode(cli, ep):
     min_d = float(np.linalg.norm(_xyz(o.flange_pose) - _xyz(o.object_pose)))
     min_d_win = -1
     success, success_win = False, None
-    for w in range(MAX_WINDOWS):
+    for w in range(max_windows):
         c = cli.call("chunk", GetChunk.Request(
-            obs_seq=o.obs_seq, reset_queue=(w == 0), images=[o.images[0]],
+            obs_seq=o.obs_seq, reset_queue=(w == 0), images=list(o.images),
             state=[*[float(v) for v in _xyz(o.flange_pose)], vac_prev],
             instruction=info["instruction"]))
         a = np.array(c.chunk.data, dtype=np.float32)
@@ -96,7 +96,7 @@ def run_episode(cli, ep):
             success, success_win = True, w
             break
     cli.call("finish", FinishEpisode.Request(
-        video_prefix=f"{REPO}/results/r3_videos/act_s00_{TASK}_ep{ep}"))
+        video_prefix=f"{videos}/{tag}_s00_{task}_ep{ep}"))
     acts_np = np.array(acts)
     net = acts_np[:, :2].sum(axis=0)
     obj_v = np.array(info["obj_start"][:2]) - BASE_XY
@@ -118,16 +118,27 @@ def run_episode(cli, ep):
 
 
 def main():
-    ref = json.load(open(REF_JSON))
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--gate", required=True)
+    ap.add_argument("--ref", required=True)
+    ap.add_argument("--out", required=True)
+    ap.add_argument("--videos", required=True)
+    ap.add_argument("--tag", default="policy")
+    ap.add_argument("--task", default="box")
+    ap.add_argument("--episodes", type=int, default=24)
+    ap.add_argument("--max-windows", type=int, default=350)
+    args = ap.parse_args()
+
+    ref = json.load(open(args.ref))
     rclpy.init()
     cli = Client()
     episodes, drift_rows = [], []
-    for ep in range(EPISODES):
-        got = run_episode(cli, ep)
+    for ep in range(args.episodes):
+        got = run_episode(cli, ep, args.task, args.max_windows,
+                          args.videos, args.tag)
         re_ = ref["episodes"][ep]
         drift = {k: dict(ros=got.get(k), ref=re_.get(k))
-                 for k in COMPARE_KEYS if got.get(k) != re_.get(k)
-                 and k != "wall_s"}
+                 for k in COMPARE_KEYS if got.get(k) != re_.get(k)}
         got["exact_match"] = not drift
         got["success_match"] = got["success"] == re_["success"]
         if drift:
@@ -138,18 +149,18 @@ def main():
               f"{'EXACT' if got['exact_match'] else 'DRIFT ' + str(list(drift))} "
               f"({got['wall_s']}s)", flush=True)
     n_ok = sum(e["success"] for e in episodes)
-    total = f"{n_ok}/{EPISODES}"
+    total = f"{n_ok}/{args.episodes}"
     gate_pass = (total == ref["success_total"]
                  and all(e["success_match"] for e in episodes))
-    report = dict(gate="R3", gate_pass=gate_pass, success_total=total,
+    report = dict(gate=args.gate, gate_pass=gate_pass, success_total=total,
                   ref_success_total=ref["success_total"],
                   exact_episodes=sum(e["exact_match"] for e in episodes),
                   drift=drift_rows, episodes=episodes)
-    os.makedirs(f"{REPO}/results", exist_ok=True)
-    json.dump(report, open(f"{REPO}/results/r3_act_c0_ros.json", "w"), indent=1)
-    print(f"R3 {'PASS' if gate_pass else 'FAIL'}: {total} "
+    os.makedirs(os.path.dirname(args.out), exist_ok=True)
+    json.dump(report, open(args.out, "w"), indent=1)
+    print(f"{args.gate} {'PASS' if gate_pass else 'FAIL'}: {total} "
           f"(ref {ref['success_total']}), exact "
-          f"{report['exact_episodes']}/{EPISODES}")
+          f"{report['exact_episodes']}/{args.episodes}")
     rclpy.shutdown()
     sys.exit(0 if gate_pass else 1)
 
