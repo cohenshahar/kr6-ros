@@ -11,6 +11,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/GetChunk.srv"
   "srv/GetObs.srv"
   "srv/FinishEpisode.srv"
+  "srv/SolveIK.srv"
+  "srv/ApplyJoint.srv"
   DEPENDENCIES sensor_msgs geometry_msgs
 )
 ament_package()

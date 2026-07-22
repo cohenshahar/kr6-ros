@@ -1,7 +1,10 @@
-# Lockstep: hand the policy an observation, get back an action chunk.
+# Lockstep: one observation in -> one 7-D action out (the lerobot policy's
+# internal chunk queue re-predicts when empty, exactly as eval_act.predict).
 uint64 obs_seq
-sensor_msgs/JointState joint_state
-sensor_msgs/Image[] images
+bool reset_queue     # true on the first call of an episode (policy.reset())
+sensor_msgs/Image image
+float64[] state      # [flange xyz, vac_prev] — the recording-frame state
+string instruction
 ---
 bool ok
-kr6_msgs/ActionChunk chunk
+kr6_msgs/ActionChunk chunk   # chunk_len=1

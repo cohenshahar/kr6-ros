@@ -1,0 +1,13 @@
+# Executor stage 2 (plant side): lead-gain joint servo toward q_wp for one
+# window (same loop as nt16 execute_window), then return the fresh observation.
+float64[] q_wp
+float64 vacuum
+---
+bool ok
+uint64 obs_seq
+sensor_msgs/JointState joint_state
+float64[] qpos_full
+geometry_msgs/Pose flange_pose
+geometry_msgs/Pose object_pose
+sensor_msgs/Image[] images
+bool done

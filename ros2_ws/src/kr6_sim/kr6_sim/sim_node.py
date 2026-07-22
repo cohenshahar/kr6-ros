@@ -34,9 +34,10 @@ from geometry_msgs.msg import Pose  # noqa: E402
 from rclpy.node import Node  # noqa: E402
 from sensor_msgs.msg import Image, JointState  # noqa: E402
 
-from kr6_msgs.srv import ApplyCmd, FinishEpisode, GetObs, Reset  # noqa: E402
+from kr6_msgs.srv import ApplyCmd, ApplyJoint, FinishEpisode, GetObs, Reset  # noqa: E402
 
-from core import ARM, LIFT_HEIGHT, LIFT_HOLD_WINDOWS, TASKS, SceneV2, load_systems  # noqa: E402
+from core import (ARM, EXEC_GATE, EXEC_OVERTIME, LIFT_HEIGHT,  # noqa: E402
+                  LIFT_HOLD_WINDOWS, TASKS, WINDOW_STEPS, SceneV2, load_systems)
 from executor import execute_window, preroll  # noqa: E402
 from oracle import setup_episode  # noqa: E402
 from visibility import MIN_VISIBLE_PX, layout_ok  # noqa: E402
@@ -91,6 +92,7 @@ class SimNode(Node):
         self.create_service(Reset, "/kr6/reset", self.on_reset)
         self.create_service(GetObs, "/kr6/get_obs", self.on_get_obs)
         self.create_service(ApplyCmd, "/kr6/apply_cmd", self.on_apply_cmd)
+        self.create_service(ApplyJoint, "/kr6/apply_joint", self.on_apply_joint)
         self.create_service(FinishEpisode, "/kr6/finish_episode", self.on_finish)
         # debug/freerun topics (best-effort mirrors of the service payloads)
         self.pub_img = self.create_publisher(Image, "/kr6/camera/policy", 2)
@@ -195,6 +197,32 @@ class SimNode(Node):
             return self._fill_obs(res, frame, done)
         except Exception as e:
             self.get_logger().error(f"apply_cmd failed: {e!r}")
+            res.ok = False
+            return res
+
+    def on_apply_joint(self, req, res):
+        """Plant-side half of execute_window: vacuum + lead-gain joint servo.
+        Byte-identical loop to nt16 execute_window after its IK line."""
+        try:
+            import mujoco
+            s = self.scene
+            q_wp = np.asarray(req.q_wp, dtype=float)
+            assert q_wp.shape == (6,), f"q_wp must be 6-D, got {q_wp.shape}"
+            s.d.ctrl[s.vac] = 1.0 if req.vacuum > 0.5 else 0.0
+            for _ in range(WINDOW_STEPS * EXEC_OVERTIME):
+                e = q_wp - np.array(s.d.qpos[s.qadr])
+                if float(np.max(np.abs(e))) < EXEC_GATE:
+                    break
+                s.d.ctrl[s.act] = np.clip(q_wp + 2.0 * e, s.lo, s.hi)
+                mujoco.mj_step(s.m, s.d)
+            s.d.ctrl[s.act] = q_wp
+            done = self._success()
+            frame = self._render_policy()
+            self.frames.append(frame)
+            self.spec_frames.append(self._render_spec())
+            return self._fill_obs(res, frame, done)
+        except Exception as e:
+            self.get_logger().error(f"apply_joint failed: {e!r}")
             res.ok = False
             return res
 

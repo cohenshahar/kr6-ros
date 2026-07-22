@@ -1,0 +1,109 @@
+{
+ "gate": "R2",
+ "gate_pass": true,
+ "diff": {
+  "success": {
+   "ros": true,
+   "ref": true,
+   "match": true
+  },
+  "success_window": {
+   "ros": 163,
+   "ref": 163,
+   "match": true
+  },
+  "windows": {
+   "ros": 164,
+   "ref": 164,
+   "match": true
+  },
+  "min_ee_obj_dist_m": {
+   "ros": 0.4753,
+   "ref": 0.4753,
+   "match": true
+  },
+  "min_ee_obj_dist_window": {
+   "ros": 139,
+   "ref": 139,
+   "match": true
+  },
+  "obj_start": {
+   "ros": [
+    0.2175,
+    -0.5548,
+    0.7949
+   ],
+   "ref": [
+    0.2175,
+    -0.5548,
+    0.7949
+   ],
+   "match": true
+  },
+  "obj_final": {
+   "ros": [
+    -0.7012,
+    -0.2804,
+    0.8696
+   ],
+   "ref": [
+    -0.7012,
+    -0.2804,
+    0.8696
+   ],
+   "match": true
+  },
+  "obj_moved_m": {
+   "ros": 0.9588,
+   "ref": 0.9588,
+   "match": true
+  },
+  "action_abs_mean": {
+   "ros": [
+    0.00772,
+    0.00393,
+    0.00426,
+    0.0007,
+    0.0019,
+    0.06531,
+    0.70873
+   ],
+   "ref": [
+    0.00772,
+    0.00393,
+    0.00426,
+    0.0007,
+    0.0019,
+    0.06531,
+    0.70873
+   ],
+   "match": true
+  },
+  "vacuum_on_frac": {
+   "ros": 0.701,
+   "ref": 0.701,
+   "match": true
+  },
+  "net_cmd_xy_mm": {
+   "ros": [
+    -760.6,
+    331.5
+   ],
+   "ref": [
+    -760.6,
+    331.5
+   ],
+   "match": true
+  },
+  "cos_cmd_vs_obj": {
+   "ros": -0.888,
+   "ref": -0.888,
+   "match": true
+  },
+  "ep_seed": {
+   "ros": 1050000,
+   "ref": 1050000,
+   "match": true
+  }
+ }
+}

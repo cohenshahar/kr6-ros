@@ -1,0 +1,9 @@
+# Executor stage 1 (offline): damped-least-squares IK, axis-only, flange site.
+# Given the sim's exact state, compute the joint waypoint for one action window.
+float64[] action     # 7-D action (dxyz used, drot ignored by design, a[6]=vacuum)
+float64[] qpos_full  # full qpos snapshot from the sim (exact-state parity)
+geometry_msgs/Pose flange_pose
+---
+bool ok
+float64[] q_wp       # 6 joint targets
+float64 vacuum       # thresholded a[6] (0/1)
